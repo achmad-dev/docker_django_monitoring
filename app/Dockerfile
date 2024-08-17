@@ -1,0 +1,18 @@
+ARG APP_IMAGE_NAME=${APP_IMAGE_NAME}
+ARG APP_IMAGE_TAG=${APP_IMAGE_TAG}
+ARG PLATFORM=${PLATFORM}
+ARG APP_CONTAINER_PORT=${APP_CONTAINER_PORT}
+
+FROM --platform=${PLATFORM} ${APP_IMAGE_NAME}:${APP_IMAGE_TAG}
+
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD ["uvicorn", "src.src.asgi:application", "--host", "0.0.0.0", "--port", "${APP_CONTAINER_PORT}"]
